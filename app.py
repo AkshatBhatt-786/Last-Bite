@@ -5,8 +5,6 @@ import sys
 from database import *
 import streamlit as st
 
-st.set_page_config(page_title="Get Started with Last-Bite")
-
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 

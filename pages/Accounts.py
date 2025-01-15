@@ -118,6 +118,8 @@ def on_login(email: str, password: str) -> bool:
     if user:
         stored_password = user[2]
         if stored_password == hash_password(password):
+            cookies.set("logged_in", True)
+            cookies.set("user_email", email)
             return True
         else:
             st.error("Invalid email or password.")
@@ -134,12 +136,12 @@ def login_view():
         st.markdown("---")
 
         # Input fields
-        user_email = st.text_input(
+        email_field = st.text_input(
             "Email Address",
             value=st.session_state.get("user_email", ""),
             placeholder="Enter your email address"
         )
-        user_password = st.text_input(
+        password_field = st.text_input(
             "Password",
             value=st.session_state.get("user_password", ""),
             placeholder="Enter your password",
@@ -147,11 +149,11 @@ def login_view():
         )
 
         # Submit button
-        if st.form_submit_button("Log In"):
-            auth_user = on_login(user_email, user_password)
+        if st.form_submit_button("Login"):
+            auth_user = on_login(email_field, password_field)
             if auth_user:
                 st.session_state.logged_in = True
-                st.session_state.user_email = user_email
+                st.session_state.user_email = email_field
                 st.rerun()
 
 
@@ -159,13 +161,13 @@ def register_view():
     with st.form("Register-Form"):
         st.header("Create Your Account")
         st.subheader("Join Last Bite and savor every moment!")
-
+        st.markdown("---")
         # Input fields
         register_email = st.text_input("Email Address", value=st.session_state.get("register_email", ""), placeholder="Enter your email address")
         register_password = st.text_input("Create Password", value=st.session_state.get("register_password", ""), placeholder="Choose a strong password", type="password")
 
         # Submit button
-        if st.form_submit_button("Register Now"):
+        if st.form_submit_button("Register"):
             register_user = on_register(register_email, register_password)
             if register_user:
                 st.session_state.logged_in = True
